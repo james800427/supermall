@@ -1,12 +1,16 @@
 <template>
-  <div id="tabbarItem" @click=" isActive = !isActive" :class="{active: isActive}" :style="textStyle">
+  <div id="tabbarItem" @click="itemClicked" :style="textStyle">
     <img :src="url"/>
     {{text}}
   </div>
 </template>
 <script>
   export default {
+    name: 'TabbarItem',
     props: {
+      'link': {
+        type: String
+      },
       'imgUrl': {
         type: null
       }, 
@@ -21,17 +25,20 @@
         default: '#d4237a'
       }
     },
-    data(){
-      return {
-        isActive: false
-      }
-    },
     computed: {
+      isActive(){
+        return this.$route.path.indexOf(this.link) != -1
+      },
       url(){
         return this.isActive ? this.imgUrlActive : this.imgUrl
       },
       textStyle(){
         return this.isActive ? {color: this.textColor} : {}
+      }
+    },
+    methods: {
+      itemClicked(){
+        this.$router.replace(this.link)
       }
     }
   }
