@@ -1,18 +1,26 @@
 <template>
-  <div id="tabbarItem" @click=" isActive = !isActive" :class="{active: isActive}">
+  <div id="tabbarItem" @click=" isActive = !isActive" :class="{active: isActive}" :style="textStyle">
     <img :src="url"/>
     {{text}}
   </div>
 </template>
 <script>
   export default {
-    props: ['imgUrl', 'imgUrlActive', 'text', {
-        'colorActive': {
-          type: String,
-          default: 'red'
-        }
+    props: {
+      'imgUrl': {
+        type: null
+      }, 
+      'imgUrlActive': {
+        type: null
+      }, 
+      'text': {
+        type: String
+      }, 
+      'textColor': {
+        type: String,
+        default: '#d4237a'
       }
-    ],
+    },
     data(){
       return {
         isActive: false
@@ -21,6 +29,9 @@
     computed: {
       url(){
         return this.isActive ? this.imgUrlActive : this.imgUrl
+      },
+      textStyle(){
+        return this.isActive ? {color: this.textColor} : {}
       }
     }
   }
@@ -39,7 +50,5 @@
     width: 24px;
     height: 24px;
   }
-  .active{
-    color: #d4237a
-  }
+  
 </style>

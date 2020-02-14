@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <Tabbar>
-      <TabbarItem v-for="(item, index) in tabbarItems" :key="index" :text="item.name" :img-url="item.url" :img-url-active="item.urlActive" color-active="blue"/>
+      <TabbarItem v-for="(item, index) in tabbarItems" :key="index" :text="item.name" :img-url="item.url" :img-url-active="item.urlActive"/>
     </Tabbar>
   </div>
 </template>
