@@ -1,20 +1,19 @@
 <template>
-  <div id="carousel" @mouseover="showBtn" @mouseout="hideBtn">
+  <div id="carousel" @mouseover="showBtn" @mouseout="hideBtn" :style="custSize">
     <!-- 只有使用行内样式，才能通过this.$refs.list.style.marginLeft获取到值 -->
     <ul id="list" ref="list" @transitionend="transitionEnd" 
-      style="transition-duration:.3s;transform:translate3d(-260px,0px,0px);backface-visibility:hidden" 
-      >
-      <li class="item" ref="img0"><a href=""><img src="../../assets/img/carousel/frame-5.jpg" alt=""></a></li>
-      <li class="item" ref="img1"><a href=""><img src="../../assets/img/carousel/frame-1.jpg" alt=""></a></li>
-      <li class="item" ref="img2"><a href=""><img src="../../assets/img/carousel/frame-2.jpg" alt=""></a></li>
-      <li class="item" ref="img3"><a href=""><img src="../../assets/img/carousel/frame-3.jpg" alt=""></a></li>
-      <li class="item" ref="img4"><a href=""><img src="../../assets/img/carousel/frame-4.jpg" alt=""></a></li>
-      <li class="item" ref="img5"><a href=""><img src="../../assets/img/carousel/frame-5.jpg" alt=""></a></li>
-      <li class="item" ref="img6"><a href=""><img src="../../assets/img/carousel/frame-1.jpg" alt=""></a></li>
+      :style="{'width': widthOnNum*7+'px','transition-duration':'.3s','transform':'translate3d(-' + custWidth + ',0px,0px)','backface-visibility':'hidden'}">
+      <li class="item" ref="img0"><a href=""><img src="../../assets/img/carousel/frame-5.jpg" alt="" :style="custSize"></a></li>
+      <li class="item" ref="img1"><a href=""><img src="../../assets/img/carousel/frame-1.jpg" alt="" :style="custSize"></a></li>
+      <li class="item" ref="img2"><a href=""><img src="../../assets/img/carousel/frame-2.jpg" alt="" :style="custSize"></a></li>
+      <li class="item" ref="img3"><a href=""><img src="../../assets/img/carousel/frame-3.jpg" alt="" :style="custSize"></a></li>
+      <li class="item" ref="img4"><a href=""><img src="../../assets/img/carousel/frame-4.jpg" alt="" :style="custSize"></a></li>
+      <li class="item" ref="img5"><a href=""><img src="../../assets/img/carousel/frame-5.jpg" alt="" :style="custSize"></a></li>
+      <li class="item" ref="img6"><a href=""><img src="../../assets/img/carousel/frame-1.jpg" alt="" :style="custSize"></a></li>
     </ul>
     <!-- <div id="seal" ref="seal" style="display:none;"><img src="../../assets/img/carousel/frame-1.jpg" alt=""></div> -->
-    <button class="btn" id="btn-goPre" ref="btnGoPre" @click="goPre">&lt;</button>
-    <button class="btn" id="btn-goNext" ref="btnGoNext" @click="goNext">&gt;</button>
+    <button :style="{'top': (heightOnNum-30)/2+'px'}" class="btn" id="btn-goPre" ref="btnGoPre" @click="goPre">&lt;</button>
+    <button :style="{'top': (heightOnNum-30)/2+'px'}" class="btn" id="btn-goNext" ref="btnGoNext" @click="goNext">&gt;</button>
     <ul class="points">
       <li class="point" @click="pointClick(1)" :style="index==1 ? {'background-color': 'red'} : {}"></li>
       <li class="point" @click="pointClick(2)" :style="index==2 ? {'background-color': 'red'} : {}"></li>
@@ -34,11 +33,32 @@
         isMouseOver: false // 用来决定是否执行startPlay()方法，false为执行，true为不执行 
       }
     },
+    props: {
+        'custWidth': {
+          type: String,
+          default: '260px'
+        },
+        'custHeight': {
+          type: String,
+          default: '160px'
+        }
+    },
+    computed: {
+      custSize(){
+        return {'width': this.custWidth, 'height': this.custHeight}
+      },
+      widthOnNum(){
+        return parseInt(this.custWidth.split('px')[0])
+      },
+      heightOnNum(){
+        return parseInt(this.custHeight.split('px')[0])
+      }
+    },
     methods: {
       autoPlay(){
         this.index++
         this.$refs.list.style.transition = 'transform .3s'
-        this.$refs.list.style.transform = `translate3d(-${this.index * 260}px, 0px, 0px)`
+        this.$refs.list.style.transform = `translate3d(-${this.index * this.dealWithPx(this.custWidth)}px, 0px, 0px)`
       },
       rollBack(){ 
           this.stopPlay()
@@ -49,7 +69,7 @@
           //下列setTimeout是为了保证切换流畅
           setTimeout(function(){
             // 'this' here(in anonymous function) is 'window' object.
-            that.$refs.list.style.transform = `translate3d(-${that.index * 260}px, 0px, 0px)`
+            that.$refs.list.style.transform = `translate3d(-${that.index * that.dealWithPx(that.custWidth)}px, 0px, 0px)`
             if ( !that.isMouseOver ){
              that.startPlay()
             }
@@ -63,12 +83,12 @@
       goPre(){
         this.index++
         this.$refs.list.style.transition = 'transform .3s'
-        this.$refs.list.style.transform = `translate3d(-${this.index * 260}px, 0px, 0px)`
+        this.$refs.list.style.transform = `translate3d(-${this.index * this.dealWithPx(this.custWidth)}px, 0px, 0px)`
       },
       goNext(){
         this.index--
         this.$refs.list.style.transition = 'transform .3s'
-        this.$refs.list.style.transform = `translate3d(-${this.index * 260}px, 0px, 0px)`
+        this.$refs.list.style.transform = `translate3d(-${this.index * this.dealWithPx(this.custWidth)}px, 0px, 0px)`
       },
       stopPlay(){
         clearInterval(this.timer)
@@ -94,7 +114,10 @@
       },
       pointClick(point){
         this.index = point
-        this.$refs.list.style.transform = `translate3d(-${this.index * 260}px, 0px, 0px)`
+        this.$refs.list.style.transform = `translate3d(-${this.index * this.dealWithPx(this.custWidth)}px, 0px, 0px)`
+      },
+      dealWithPx(px){
+        return parseInt(px.split('px')[0])
       }
     },
     mounted(){
@@ -108,29 +131,14 @@
     margin: 0
   }
   #carousel{
-    width: 260px;
-    height: 160px;
     position: relative;
     overflow: hidden
   }
   #list{
-    width: 1820px;
-    transition-duration: .3s
+    height: 100%
   }
   .item{
     float: left;
-  }
-  img{
-    width: 260px;
-    height: 160px
-  }
-  #seal{
-    width: 260px;
-    height: 160px;
-    position: absolute;
-    left: 0px;
-    top: 0px;
-    z-index: 50
   }
   .btn{
     width: 30px;
@@ -140,7 +148,6 @@
     color: #fff;
     z-index: 100;
     position: absolute;
-    top: 65px;
     background-color: rgb(60, 60, 33);
     border: solid 1px rgb(60, 60, 33);
     border-radius: 100%;
@@ -159,7 +166,7 @@
     list-style: none;
     position: absolute;
     bottom: 6px;
-    left: 100px;
+    right: 10%;
     z-index: 120
   }
   .point{

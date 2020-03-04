@@ -11,7 +11,7 @@
         right
       </template>
     </Navbar>
-    <Carousel/>
+    <Carousel cust-width="600px" cust-height="300px"/>
   </div>
 </template>
 <script>
