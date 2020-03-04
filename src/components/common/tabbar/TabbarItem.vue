@@ -38,12 +38,13 @@
     },
     methods: {
       itemClicked(){
-        this.$router.replace(this.link)
+        this.$router.replace(this.link).then(() => {console.log('处理成功')}).catch(err => {err}) //应为在vue-router 3.1版本以后$router的方法都返回一个promise，
+        console.log(this.$route.path)
       }
     }
   }
 </script>
-<style>
+<style scoped>
   #tabbarItem{
     height: 49px;
     display: flex;
